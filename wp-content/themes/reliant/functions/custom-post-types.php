@@ -7,17 +7,27 @@ add_action( 'init', 'narwhal_register_post_types');
 
   // REGISTER POST TYPES
 function narwhal_register_post_types() {
-  $post_types = array(
-   'reliant_testimonial' => array(
-     'single_label' => 'Testimonial',
-     'plural_label' => 'Testimonials',
-     'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
-     'taxonomies' => array('post_tag'),
-     'rewrite' => array('slug' => 'testimonials', 'with_front' => false),
-     'publicly_queryable' => true,
-     'has_archive' => true,
-     'menu_icon' => 'dashicons-media-text'
-   )
+	$post_types = array(
+		'reliant_testimonial' => array(
+			'single_label' => 'Testimonial',
+			'plural_label' => 'Testimonials',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('post_tag'),
+			'rewrite' => array('slug' => 'testimonials', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-media-text'
+		),
+		'reliant_case_study' => array(
+			'single_label' => 'Case Study',
+			'plural_label' => 'Case Studies',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('category, post_tag'),
+			'rewrite' => array('slug' => 'case-studies', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-admin-page'
+		)
   );
   foreach ($post_types as $machine_name => $post_type) {
     $labels = array(
