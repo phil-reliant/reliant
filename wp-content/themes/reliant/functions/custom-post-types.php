@@ -12,7 +12,7 @@ function narwhal_register_post_types() {
 			'single_label' => 'Testimonial',
 			'plural_label' => 'Testimonials',
 			'single_graphql_label' => 'testimonial',
-			'plural_graphql_label' => 'testimionials',
+			'plural_graphql_label' => 'testimonials',
 			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
 			'taxonomies' => array('post_tag'),
 			'rewrite' => array('slug' => 'testimonials', 'with_front' => false),
