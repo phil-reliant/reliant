@@ -11,6 +11,8 @@ function narwhal_register_post_types() {
 		'reliant_testimonial' => array(
 			'single_label' => 'Testimonial',
 			'plural_label' => 'Testimonials',
+			'single_graphql_label' => 'testimonial',
+			'plural_graphql_lable' => 'testimionials',
 			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
 			'taxonomies' => array('post_tag'),
 			'rewrite' => array('slug' => 'testimonials', 'with_front' => false),
@@ -21,6 +23,8 @@ function narwhal_register_post_types() {
 		'reliant_case_study' => array(
 			'single_label' => 'Case Study',
 			'plural_label' => 'Case Studies',
+			'single_graphql_label' => 'caseStudy',
+			'plural_graphql_label' => 'caseStudies',
 			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
 			'taxonomies' => array('category, post_tag'),
 			'rewrite' => array('slug' => 'case-studies', 'with_front' => false),
@@ -57,8 +61,8 @@ function narwhal_register_post_types() {
         'show_in_rest' => true,
         'show_in_graphql' => true,
         'hierarchical' => true,
-        'graphql_single_name' => $post_type['single_label'],
-        'graphql_plural_name' => $post_type['plural_label']
+        'graphql_single_name' => $post_type['single_graphql_label'],
+        'graphql_plural_name' => $post_type['plural_graphql_label']
       )
     );
   }
