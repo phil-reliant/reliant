@@ -16,5 +16,13 @@ endif;
 add_action('after_setup_theme', 'reliant_setup');
 
 if( function_exists('acf_add_options_page') ) {
-	acf_add_options_page();
+	acf_add_options_page(
+		array(
+			'page_title'      => __( 'Options' ),
+			'menu_title'      => __( 'Options' ),
+			'menu_slug'       => 'site-options',
+			'capability'      => 'edit_posts',
+			'show_in_graphql' => true
+		)
+	);
 }
