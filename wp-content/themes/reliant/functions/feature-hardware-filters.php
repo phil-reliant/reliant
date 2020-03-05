@@ -18,6 +18,8 @@ class ReliantHardwareFilters{
 		add_action( "save_post_reliant_brand", array( $this, '_update_filter_data_reliant_brand' ) );
 		add_action( "save_post_reliant_product_type", array( $this, '_update_filter_data_reliant_product_type' ) );
 
+		add_filter( 'woocommerce_product_data_store_cpt_get_products_query', array( $this, '_custom_wc_query_vars' ), 10, 2 );
+
 		//add custom fields to graphql - https://docs.wpgraphql.com/getting-started/custom-fields-and-meta/
 		add_action( 'graphql_register_types', array( $this, '_brand_product_cache' ) );
 		add_action( 'graphql_register_types', array( $this, '_product_type_brand_cache' ) );

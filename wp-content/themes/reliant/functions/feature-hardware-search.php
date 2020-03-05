@@ -9,7 +9,6 @@ class ReliantHardwareSearch{
 
 		//add custom fields to search query
 		add_action( 'pre_get_posts', array( $this, '_maybe_alter_query' ) );
-		add_filter( 'woocommerce_product_data_store_cpt_get_products_query', array( $this, '_custom_wc_query_vars' ), 10, 2 );
 
 	}
 
