@@ -45,6 +45,8 @@ if ( ! function_exists( 'reliant_setup' ) ) :
 		// This theme uses wp_nav_menu() in one location.
 		register_nav_menus( array(
 			'menu-1' => esc_html__( 'Primary', 'reliant' ),
+			'footer-primary' => esc_html__( 'Footer Primary', 'reliant' ),
+			'footer-secondary' => esc_html__( 'Footer Secondary', 'reliant' ),
 		) );
 
 		/*
@@ -166,4 +168,3 @@ foreach ( new RecursiveIteratorIterator( $iterator ) as $file ) {
 		require $file;
 	}
 }
-
