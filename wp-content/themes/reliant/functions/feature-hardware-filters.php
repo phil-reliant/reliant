@@ -268,10 +268,21 @@ class ReliantHardwareFilters{
 				$type_sorter[$type] = [];
 			}
 
-			$type_sorter[$type][ $query->post->ID ] = [
+			$cache_array = [
 				'name' => $query->post->post_title,
 				'products' => get_post_meta( $query->post->ID, 'product_cache', true ),
 			];
+
+			if( 'yes' === get_post_meta( $query->post->ID, 'link_from_hardware_catalog', true ) ){
+				$cache_array['url'] = get_permalink( $query->post->ID );
+			}
+
+			while( have_rows( 'additional_links' ) ){
+				the_row();
+				$cache_array['additional_links'][] = get_sub_field( 'link' );
+			}
+
+			$type_sorter[$type][ $query->post->ID ] = $cache_array;
 		}
 
 		//get types in the correct order and fill based on families
@@ -315,11 +326,11 @@ class ReliantHardwareFilters{
 		) );
 		$post_ids = implode( ', ', $products->posts );
 
+		$this->_update_product_brand_cache( $brand_id );
 		//determine if brand has changed
 		$previous_brand = get_post_meta( $post_id, 'previous_brand', true );
 		$brand_id = get_post_meta( $post_id, 'brand', true );
 		if( $previous_brand != $brand_id ){
-			$this->_update_product_brand_cache( $brand_id );
 			if( 0 != $previous_brand ){
 				$this->_update_product_brand_cache( $previous_brand );
 			}
@@ -370,10 +381,13 @@ class ReliantHardwareFilters{
 
 		$cache = array();
 		foreach( $products as $product ){
-			$cache[] = array(
+			$cache_info = [
 				'name' => $product->get_name(),
-				'url' => get_permalink( $product->get_id() ),
-			);
+			];
+			if( 'yes' === get_post_meta( $product->get_id(), 'link_from_hardware_catalog', true ) ){
+				$cache_info['url'] = get_permalink( $product->get_id() );
+			}
+			$cache[] = $cache_info;
 		}
 
 		update_post_meta( $post_id, 'product_cache', $cache );
@@ -458,8 +472,8 @@ class ReliantHardwareFilters{
 		$brand_object = get_post( $brand );
 		update_post_meta( $post_id, 'brand_text', $brand_object->post_title );
 
+		$this->_update_product_family_cache( $family_id );
 		if( $previous_family != $family_id ){
-			$this->_update_product_family_cache( $family_id );
 			if( 0 != $previous_family ){
 				$this->_update_product_family_cache( $previous_family );
 			}
