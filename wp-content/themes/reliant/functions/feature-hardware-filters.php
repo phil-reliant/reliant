@@ -76,7 +76,7 @@ class ReliantHardwareFilters{
 					'page-attributes',
 				),
 				'taxonomies' => array(),
-				'rewrite' => array( 'slug' => 'brands', 'with_front' => false ),
+				'rewrite' => array( 'slug' => 'brand', 'with_front' => false ),
 				'publicly_queryable' => true,
 				'has_archive' => false,
 				'show_in_menu' => 'edit.php?post_type=product',
