@@ -8,18 +8,6 @@ add_action( 'init', 'narwhal_register_post_types');
   // REGISTER POST TYPES
 function narwhal_register_post_types() {
 	$post_types = array(
-		'reliant_testimonial' => array(
-			'single_label' => 'Testimonial',
-			'plural_label' => 'Testimonials',
-			'single_graphql_label' => 'testimonial',
-			'plural_graphql_label' => 'testimonials',
-			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
-			'taxonomies' => array('post_tag'),
-			'rewrite' => array('slug' => 'testimonials', 'with_front' => false),
-			'publicly_queryable' => true,
-			'has_archive' => true,
-			'menu_icon' => 'dashicons-media-text'
-		),
 		'reliant_case_study' => array(
 			'single_label' => 'Case Study',
 			'plural_label' => 'Case Studies',
@@ -30,7 +18,67 @@ function narwhal_register_post_types() {
 			'rewrite' => array('slug' => 'case-studies', 'with_front' => false),
 			'publicly_queryable' => true,
 			'has_archive' => true,
-			'menu_icon' => 'dashicons-admin-page'
+			'menu_icon' => 'dashicons-portfolio'
+		),
+		'reliant_infographic' => array(
+			'single_label' => 'Infographic',
+			'plural_label' => 'Infographics',
+			'single_graphql_label' => 'infographic',
+			'plural_graphql_label' => 'infographics',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('category, post_tag'),
+			'rewrite' => array('slug' => 'infographics', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-analytics'
+		),
+		'reliant_podcast' => array(
+			'single_label' => 'Podcast',
+			'plural_label' => 'Podcasts',
+			'single_graphql_label' => 'podcast',
+			'plural_graphql_label' => 'podcasts',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('category, post_tag'),
+			'rewrite' => array('slug' => 'podcasts', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-media-audio'
+		),
+		'reliant_testimonial' => array(
+			'single_label' => 'Testimonial',
+			'plural_label' => 'Testimonials',
+			'single_graphql_label' => 'testimonial',
+			'plural_graphql_label' => 'testimonials',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('post_tag'),
+			'rewrite' => array('slug' => 'testimonials', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-awards'
+		),
+		'reliant_video' => array(
+			'single_label' => 'Video',
+			'plural_label' => 'Videos',
+			'single_graphql_label' => 'video',
+			'plural_graphql_label' => 'videos',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('category, post_tag'),
+			'rewrite' => array('slug' => 'videos', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-format-video'
+		),
+		'reliant_white_paper' => array(
+			'single_label' => 'White Paper',
+			'plural_label' => 'White Papers',
+			'single_graphql_label' => 'whitePaper',
+			'plural_graphql_label' => 'whitePapers',
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
+			'taxonomies' => array('category, post_tag'),
+			'rewrite' => array('slug' => 'white-papers', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-media-document'
 		)
   );
   foreach ($post_types as $machine_name => $post_type) {
