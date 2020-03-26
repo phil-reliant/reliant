@@ -133,7 +133,10 @@ function reliant_scripts() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'reliant_scripts' );
-
+function stbank_admin_scripts() {
+	wp_enqueue_style( 'admin-style', get_template_directory_uri() . '/admin.css' );
+}
+add_action( 'admin_enqueue_scripts', 'stbank_admin_scripts' );
 /**
  * Implement the Custom Header feature.
  */
@@ -168,3 +171,7 @@ foreach ( new RecursiveIteratorIterator( $iterator ) as $file ) {
 		require $file;
 	}
 }
+add_action( 'init', function() {
+    remove_post_type_support( 'post', 'editor' );
+    remove_post_type_support( 'page', 'editor' );
+}, 99);
