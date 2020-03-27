@@ -172,6 +172,5 @@ foreach ( new RecursiveIteratorIterator( $iterator ) as $file ) {
 	}
 }
 add_action( 'init', function() {
-    remove_post_type_support( 'post', 'editor' );
     remove_post_type_support( 'page', 'editor' );
 }, 99);
