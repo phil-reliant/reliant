@@ -1,0 +1,22 @@
+.narwhal-icons-select2-template{
+	display: flex;
+	align-items: center;
+}
+
+.narwhal-icons-select2-template span{
+	margin-left: 1em;
+}
+.narwhal-icons-select2 ul{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.narwhal-icons-select2 .narwhal-icons-select2-template svg{
+	width: 40px;
+	height: 40px;
+	margin: .25rem;
+}
+
+.narwhal-icons-select2 .narwhal-icons-select2-template span{
+	display: none;
+}
