@@ -550,7 +550,7 @@ class Config {
 						/**
 						 * This hooks allows for filtering of the post object source. In case an non-core defined
 						 * post-type is being targeted.
-						 * 
+						 *
 						 * @param mixed|null  $source  GraphQL Type source.
 						 * @param mixed|null  $value   Root ACF field value.
 						 * @param AppContext  $context AppContext instance.
@@ -654,7 +654,8 @@ class Config {
 					'resolve' => function( $root, $args, $context, $info ) use ( $acf_field ) {
 						$value = $this->get_acf_field_value( $root, $acf_field );
 						$terms = [];
-						if ( ! empty( $value ) && is_array( $value ) ) {
+						if ( ! empty( $value ) ) {
+							$value = is_array( $value ) ? $value : [ $value ];
 							foreach ( $value as $term ) {
 								$terms[] = DataSource::resolve_term_object( (int) $term, $context );
 							}
@@ -703,7 +704,7 @@ class Config {
 					$field_config['type'] = $field_type_name;
 					break;
 				}
-			
+
 				$fields = [
 					'streetAddress' => [
 						'type'        => 'String',
