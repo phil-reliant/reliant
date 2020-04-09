@@ -79,7 +79,19 @@ function narwhal_register_post_types() {
 			'publicly_queryable' => true,
 			'has_archive' => true,
 			'menu_icon' => 'dashicons-media-document'
-		)
+		),
+		'reliant_eol_product' => array(
+			'single_label' => 'EOL Product',
+			'plural_label' => 'EOL Products',
+			'single_graphql_label' => 'eolProduct',
+			'plural_graphql_label' => 'eolProducts',
+			'supports' => array( 'title', ),
+			'taxonomies' => array(),
+			'rewrite' => array('slug' => 'eol-product', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => false,
+			'menu_icon' => 'dashicons-palmtree'
+		),
   );
   foreach ($post_types as $machine_name => $post_type) {
     $labels = array(
@@ -114,4 +126,39 @@ function narwhal_register_post_types() {
       )
     );
   }
+
+	$labels = array(
+		'name'                       => _x( 'Categories', 'Taxonomy General Name', 'st-music-park' ),
+		'singular_name'              => _x( 'Category', 'Taxonomy Singular Name', 'st-music-park' ),
+		'menu_name'                  => __( 'Categories', 'st-music-park' ),
+		'all_items'                  => __( 'All Items', 'st-music-park' ),
+		'parent_item'                => __( 'Parent Item', 'st-music-park' ),
+		'parent_item_colon'          => __( 'Parent Item:', 'st-music-park' ),
+		'new_item_name'              => __( 'New Item Name', 'st-music-park' ),
+		'add_new_item'               => __( 'Add New Item', 'st-music-park' ),
+		'edit_item'                  => __( 'Edit Item', 'st-music-park' ),
+		'update_item'                => __( 'Update Item', 'st-music-park' ),
+		'view_item'                  => __( 'View Item', 'st-music-park' ),
+		'separate_items_with_commas' => __( 'Separate items with commas', 'st-music-park' ),
+		'add_or_remove_items'        => __( 'Add or remove items', 'st-music-park' ),
+		'choose_from_most_used'      => __( 'Choose from the most used', 'st-music-park' ),
+		'popular_items'              => __( 'Popular Items', 'st-music-park' ),
+		'search_items'               => __( 'Search Items', 'st-music-park' ),
+		'not_found'                  => __( 'Not Found', 'st-music-park' ),
+		'no_terms'                   => __( 'No items', 'st-music-park' ),
+		'items_list'                 => __( 'Items list', 'st-music-park' ),
+		'items_list_navigation'      => __( 'Items list navigation', 'st-music-park' ),
+	);
+
+	$args = array(
+		'labels'                     => $labels,
+		'hierarchical'               => false,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_admin_column'          => true,
+		'show_in_nav_menus'          => false,
+		'show_tagcloud'              => true,
+	);
+
+	register_taxonomy( 'eol_category', array( 'reliant_eol_product' ), $args );
 }
