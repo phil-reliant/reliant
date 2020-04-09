@@ -158,6 +158,9 @@ function narwhal_register_post_types() {
 		'show_admin_column'          => true,
 		'show_in_nav_menus'          => false,
 		'show_tagcloud'              => true,
+		'show_in_graphql' => true,
+		'graphql_single_name' => 'EOLCategory',
+		'graphql_plural_name' => 'EOLCategories',
 	);
 
 	register_taxonomy( 'eol_category', array( 'reliant_eol_product' ), $args );
