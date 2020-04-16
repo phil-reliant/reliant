@@ -273,9 +273,8 @@ class ReliantHardwareFilters{
 				'products' => get_post_meta( $query->post->ID, 'product_cache', true ),
 			];
 
-			if( 'yes' === get_post_meta( $query->post->ID, 'link_from_hardware_catalog', true ) ){
-				$cache_array['url'] = get_permalink( $query->post->ID );
-			}
+			// take the ACF field 'link_from_hardware_catalog' and send it along (this is the optional value for where a product family should link to)
+			$cache_array['link_from_hardware_catalog'] = get_post_meta( $query->post->ID, 'link_from_hardware_catalog', true );
 
 			while( have_rows( 'additional_links' ) ){
 				the_row();
