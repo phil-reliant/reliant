@@ -40,3 +40,14 @@ function custom_excerpt_length( $length ) {
 	return 45;
 }
 add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
+
+function trim_custom_excerpt($excerpt) {
+
+	if ( has_excerpt() ) {
+		$excerpt = wp_trim_words( get_the_excerpt(), apply_filters( "excerpt_length", 45 ) );
+	}
+
+	return $excerpt;
+}
+
+add_filter("the_excerpt", "trim_custom_excerpt", 999);
