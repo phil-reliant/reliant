@@ -35,3 +35,8 @@ function reliant_pingback_header() {
 	}
 }
 add_action( 'wp_head', 'reliant_pingback_header' );
+
+function custom_excerpt_length( $length ) {
+	return 45;
+}
+add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
