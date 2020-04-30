@@ -374,6 +374,8 @@ class ReliantHardwareFilters{
 			'status' => 'publish',
 			'visibility' => array( 'visible', 'catalog', 'search' ),
 			'stock_status' => 'instock',
+			'orderby' => 'title',
+			'order' => 'ASC'			
 		];
 		$query = new WC_Product_Query( $args );
 		$products = $query->get_products();
