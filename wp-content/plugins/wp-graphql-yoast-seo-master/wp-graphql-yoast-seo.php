@@ -41,7 +41,8 @@ add_action('graphql_register_types', function () {
       'opengraphImage' => ['type' => 'MediaItem'],
       'twitterTitle' => ['type' => 'String'],
       'twitterDescription' => ['type' => 'String'],
-      'twitterImage' => ['type' => 'MediaItem']
+      'twitterImage' => ['type' => 'MediaItem'],
+	  'canonicalURL' => ['type' => 'String'],
     ]
   ]);
 
@@ -82,7 +83,8 @@ add_action('graphql_register_types', function () {
               'opengraphImage' => DataSource::resolve_post_object(get_post_meta($post->ID, '_yoast_wpseo_opengraph-image-id', true), $context),
               'twitterTitle' => trim(get_post_meta($post->ID, '_yoast_wpseo_twitter-title', true)),
               'twitterDescription' => trim(get_post_meta($post->ID, '_yoast_wpseo_twitter-description', true)),
-              'twitterImage' =>  DataSource::resolve_post_object(get_post_meta($post->ID, '_yoast_wpseo_twitter-image-id', true), $context)
+              'twitterImage' =>  DataSource::resolve_post_object(get_post_meta($post->ID, '_yoast_wpseo_twitter-image-id', true), $context),
+			  'canonicalURL' => trim(get_post_meta($post->ID, '_yoast_wpseo_canonical', true)),
             );
             wp_reset_query();
 
@@ -92,16 +94,16 @@ add_action('graphql_register_types', function () {
       endif;
     }
   }
-  
+
   if (!empty($taxonomies) && is_array($taxonomies)) {
     foreach ($taxonomies as $tax) {
 
 			$taxonomy = get_taxonomy( $tax );
-			
+
 			if ( empty( $taxonomy ) || ! isset( $taxonomy->graphql_single_name ) ) {
 				return;
 			}
-			
+
 
         register_graphql_field($taxonomy->graphql_single_name, 'seo', [
           'type' => 'SEO',
@@ -121,10 +123,10 @@ add_action('graphql_register_types', function () {
               )
             );
             the_post();
-  
+
             $wpseo_frontend = WPSEO_Frontend::get_instance();
             $wpseo_frontend->reset();
-          
+
             $meta =	WPSEO_Taxonomy_Meta::get_term_meta((int) $term_obj->term_id, $term_obj->taxonomy);
 
             // Get data
@@ -143,10 +145,10 @@ add_action('graphql_register_types', function () {
               'twitterImage' => DataSource::resolve_post_object($meta['wpseo_twitter-image-id'], $context)
             );
             wp_reset_query();
-  
+
             return !empty($seo) ? $seo : null;
           }
-        ]);  
+        ]);
 
     }
   }
