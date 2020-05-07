@@ -70,6 +70,8 @@ add_action('graphql_register_types', function () {
       'metaKeywords' => ['type' => 'String'],
       'metaRobotsNoindex' => ['type' => 'String'],
       'metaRobotsNofollow' => ['type' => 'String'],
+	  'metaRobotsAdvanced' => ['type' => 'String'],
+	  'metaRobotsFull' => ['type' => 'String'],
       'opengraphTitle' => ['type' => 'String'],
       'opengraphUrl' => ['type' => 'String'],
       'opengraphSiteName' => ['type' => 'String'],
@@ -82,9 +84,12 @@ add_action('graphql_register_types', function () {
       'opengraphImage' => ['type' => 'MediaItem'],
       'twitterTitle' => ['type' => 'String'],
       'twitterDescription' => ['type' => 'String'],
+	  'twitterCardType' => ['type' => 'String'],
       'twitterImage' => ['type' => 'MediaItem'],
       'canonical' => ['type' => 'String'],
+	  'canonicalURL' => ['type' => 'String'],
       'breadcrumbs' => ['type' => ['list_of' => 'SEOPostTypeBreadcrumbs']],
+	  'schema' => ['type' => 'String'],
     ]
   ]);
 
@@ -279,6 +284,7 @@ add_action('graphql_register_types', function () {
 
             // https://developer.yoast.com/blog/yoast-seo-14-0-using-yoast-seo-surfaces/
             $robots = YoastSEO()->meta->for_post($post->ID)->robots;
+
             // Get data
             $seo = array(
               'title' => trim(YoastSEO()->meta->for_post($post->ID)->title),
@@ -287,6 +293,8 @@ add_action('graphql_register_types', function () {
               'metaKeywords' => trim(get_post_meta($post->ID, '_yoast_wpseo_metakeywords', true)),
               'metaRobotsNoindex' => $robots['index'],
               'metaRobotsNofollow' => $robots['follow'],
+			  'metaRobotsFull' => implode( ',', $robots ),
+			  'metaRobotsAdvanced' => '',
               'opengraphTitle' => trim(YoastSEO()->meta->for_post($post->ID)->open_graph_title),
               'opengraphUrl' => trim(YoastSEO()->meta->for_post($post->ID)->open_graph_url),
               'opengraphSiteName' => trim(YoastSEO()->meta->for_post($post->ID)->open_graph_site_name),
@@ -302,7 +310,9 @@ add_action('graphql_register_types', function () {
               'twitterDescription' => trim(YoastSEO()->meta->for_post($post->ID)->twitter_description),
               'twitterImage' => DataSource::resolve_post_object(attachment_url_to_postid(YoastSEO()->meta->for_post($post->ID)->twitter_image), $context),
               'canonical' => trim(YoastSEO()->meta->for_post($post->ID)->canonical),
-              'breadcrumbs' => YoastSEO()->meta->for_post($post->ID)->breadcrumbs
+			  'canonicalURL' => trim(YoastSEO()->meta->for_post($post->ID)->canonical),
+              'breadcrumbs' => YoastSEO()->meta->for_post($post->ID)->breadcrumbs,
+			  'schema' => json_encode( YoastSEO()->meta->for_post($post->ID)->schema ),
             );
 
             return !empty($seo) ? $seo : null;
@@ -340,6 +350,8 @@ add_action('graphql_register_types', function () {
             'metaKeywords' => trim($meta['wpseo_metakeywords']),
             'metaRobotsNoindex' => $robots['index'],
             'metaRobotsNofollow' => $robots['follow'],
+			'metaRobotsFull' => implode( ',', $robots ),
+			'metaRobotsAdvanced' => '',
             'opengraphTitle' => trim(YoastSEO()->meta->for_term($term->term_id)->open_graph_title),
             'opengraphUrl' => trim(YoastSEO()->meta->for_term($term->term_id)->open_graph_url),
             'opengraphSiteName' => trim(YoastSEO()->meta->for_term($term->term_id)->open_graph_site_name),
@@ -355,7 +367,9 @@ add_action('graphql_register_types', function () {
             'twitterDescription' => trim(YoastSEO()->meta->for_term($term->term_id)->twitter_description),
             'twitterImage' => DataSource::resolve_post_object($meta['wpseo_twitter-image-id'], $context),
             'canonical' => trim($meta['canonical']),
-            'breadcrumbs' => YoastSEO()->meta->for_term($term->term_id)->breadcrumbs
+			'canonicalURL' => trim($meta['canonical']),
+            'breadcrumbs' => YoastSEO()->meta->for_term($term->term_id)->breadcrumbs,
+			'schema' => json_encode( YoastSEO()->meta->for_term($term->term_id)->schema ),
           );
           wp_reset_query();
 
