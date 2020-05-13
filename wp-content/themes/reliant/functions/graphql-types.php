@@ -35,21 +35,6 @@ function register_redirects_type() {
 				$ret = $redirects[ $request ];
 			}elseif( isset( $redirects[ $clean_request ] ) ){
 				$ret = $redirects[ $clean_request ];
-			}else{
-				//wildcard checks - loosely based on same logic in plugin file
-				$wildcard = get_option( '301_redirects_wildcard' );
-				if( $wildcard ){
-					foreach( $redirects as $match => $redirect ){
-						$match = str_replace('*','(.*)',$match);
-						$pattern = '/^' . str_replace( '/', '\/', rtrim( $match, '/' ) ) . '/';
-						$redirect = str_replace('*','$1',$redirect);
-						$output = preg_replace($pattern, $redirect, $clean_request);
-						if ( $output !== $clean_request && $output !== $request ) {
-							// pattern matched, perform redirect
-							$ret = $output;
-						}
-					}
-				}
 			}
 
 			return $ret;
