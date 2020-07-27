@@ -63,10 +63,9 @@ class GF_Field_Website extends GF_Field {
 		$disabled_text   = $is_form_editor ? "disabled='disabled'" : '';
 		$class_suffix    = $is_entry_detail ? '_admin' : '';
 		$class           = $size . $class_suffix;
+		$class           = esc_attr( $class );
 		$is_html5        = RGFormsModel::is_html5_enabled();
 		$html_input_type = $is_html5 ? 'url' : 'text';
-
-		$max_length = is_numeric( $this->maxLength ) ? "maxlength='{$this->maxLength}'" : '';
 
 		$placeholder_attribute = $this->get_field_placeholder_attribute();
 		$required_attribute    = $this->isRequired ? 'aria-required="true"' : '';
@@ -78,7 +77,7 @@ class GF_Field_Website extends GF_Field {
 		$class    = esc_attr( $class );
 
 		return "<div class='ginput_container ginput_container_website'>
-                    <input name='input_{$id}' id='{$field_id}' type='$html_input_type' value='{$value}' class='{$class}' {$max_length} {$tabindex} {$aria_describedby} {$disabled_text} {$placeholder_attribute} {$required_attribute} {$invalid_attribute}/>
+                    <input name='input_{$id}' id='{$field_id}' type='$html_input_type' value='{$value}' class='{$class}' {$tabindex} {$aria_describedby} {$disabled_text} {$placeholder_attribute} {$required_attribute} {$invalid_attribute}/>
                 </div>";
 	}
 

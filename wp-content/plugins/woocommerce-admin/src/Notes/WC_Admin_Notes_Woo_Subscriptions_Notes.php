@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * WC_Admin_Notes_Woo_Subscriptions_Notes
  */
 class WC_Admin_Notes_Woo_Subscriptions_Notes {
-	const LAST_REFRESH_OPTION_KEY = 'wc-admin-wc-helper-last-refresh';
+	const LAST_REFRESH_OPTION_KEY = 'woocommerce_admin-wc-helper-last-refresh';
 	const CONNECTION_NOTE_NAME    = 'wc-admin-wc-helper-connection';
 	const SUBSCRIPTION_NOTE_NAME  = 'wc-admin-wc-helper-subscription';
 	const NOTIFY_WHEN_DAYS_LEFT   = 60;
@@ -185,13 +185,13 @@ class WC_Admin_Notes_Woo_Subscriptions_Notes {
 		$note->set_content( __( 'Connect to get important product notifications and updates.', 'woocommerce-admin' ) );
 		$note->set_content_data( (object) array() );
 		$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
-		$note->set_icon( 'info' );
 		$note->set_name( self::CONNECTION_NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'connect',
 			__( 'Connect', 'woocommerce-admin' ),
-			'?page=wc-addons&section=helper'
+			'?page=wc-addons&section=helper',
+			WC_Admin_Note::E_WC_ADMIN_NOTE_UNACTIONED
 		);
 		$note->save();
 	}
@@ -334,7 +334,6 @@ class WC_Admin_Notes_Woo_Subscriptions_Notes {
 		// Reset everything in case we are repurposing an expired note as an expiring note.
 		$note->set_title( $note_title );
 		$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_WARNING );
-		$note->set_icon( 'notice' );
 		$note->set_name( self::SUBSCRIPTION_NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
 		$note->clear_actions();
@@ -358,7 +357,7 @@ class WC_Admin_Notes_Woo_Subscriptions_Notes {
 		$product_name = $subscription['product_name'];
 		$product_page = $subscription['product_url'];
 		$expires      = intval( $subscription['expires'] );
-		$expires_date = date( 'F jS', $expires );
+		$expires_date = gmdate( 'F jS', $expires );
 
 		$note = $this->find_note_for_product_id( $product_id );
 		if ( $note ) {
@@ -398,7 +397,6 @@ class WC_Admin_Notes_Woo_Subscriptions_Notes {
 		$note->set_content( $note_content );
 		$note->set_content_data( $note_content_data );
 		$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_WARNING );
-		$note->set_icon( 'notice' );
 		$note->set_name( self::SUBSCRIPTION_NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
 		$note->clear_actions();

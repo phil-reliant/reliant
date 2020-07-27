@@ -10,12 +10,16 @@ namespace Automattic\WooCommerce\Admin;
 defined( 'ABSPATH' ) || exit;
 
 use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
-use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Facebook_Extension;
 use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Historical_Data;
 use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Order_Milestones;
-use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Welcome_Message;
 use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Woo_Subscriptions_Notes;
 use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Tracking_Opt_In;
+use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_WooCommerce_Payments;
+use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Install_JP_And_WCS_Plugins;
+use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Draw_Attention;
+use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Coupon_Page_Moved;
+use \Automattic\WooCommerce\Admin\RemoteInboxNotifications\RemoteInboxNotificationsEngine;
+use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Home_Screen_Feedback;
 
 /**
  * Feature plugin main class.
@@ -75,9 +79,12 @@ class FeaturePlugin {
 		if ( did_action( 'plugins_loaded' ) ) {
 			self::on_plugins_loaded();
 		} else {
-			add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
+			// Make sure we hook into `plugins_loaded` before core's Automattic\WooCommerce\Package::init().
+			// If core is network activated but we aren't, the packaged version of WooCommerce Admin will
+			// attempt to use a data store that hasn't been loaded yet - because we've defined our constants here.
+			// See: https://github.com/woocommerce/woocommerce-admin/issues/3869.
+			add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), 9 );
 		}
-		add_filter( 'action_scheduler_store_class', array( $this, 'replace_actionscheduler_store_class' ) );
 	}
 
 	/**
@@ -96,6 +103,12 @@ class FeaturePlugin {
 	 * @return void
 	 */
 	public function on_deactivation() {
+		// Don't clean up if the WooCommerce Admin package is in core.
+		// NOTE: Any future divergence from the core package will need to be accounted for here.
+		if ( defined( 'WC_ADMIN_PACKAGE_EXISTS' ) && WC_ADMIN_PACKAGE_EXISTS ) {
+			return;
+		}
+
 		// Check if we are deactivating due to dependencies not being satisfied.
 		// If WooCommerce is disabled we can't include files that depend upon it.
 		if ( ! $this->has_satisfied_dependencies() ) {
@@ -142,7 +155,7 @@ class FeaturePlugin {
 		$this->define( 'WC_ADMIN_PLUGIN_FILE', WC_ADMIN_ABSPATH . 'woocommerce-admin.php' );
 		// WARNING: Do not directly edit this version number constant.
 		// It is updated as part of the prebuild process from the package.json value.
-		$this->define( 'WC_ADMIN_VERSION_NUMBER', '0.24.0' );
+		$this->define( 'WC_ADMIN_VERSION_NUMBER', '1.3.1' );
 	}
 
 	/**
@@ -160,7 +173,7 @@ class FeaturePlugin {
 		ReportsSync::init();
 		Install::init();
 		Events::instance()->init();
-		new API\Init();
+		API\Init::instance();
 		ReportExporter::init();
 
 		// CRUD classes.
@@ -174,57 +187,24 @@ class FeaturePlugin {
 		new WC_Admin_Notes_Woo_Subscriptions_Notes();
 		new WC_Admin_Notes_Historical_Data();
 		new WC_Admin_Notes_Order_Milestones();
-		new WC_Admin_Notes_Welcome_Message();
-		new WC_Admin_Notes_Facebook_Extension();
 		new WC_Admin_Notes_Tracking_Opt_In();
+		new WC_Admin_Notes_WooCommerce_Payments();
+		new WC_Admin_Notes_Install_JP_And_WCS_Plugins();
+		new WC_Admin_Notes_Draw_Attention();
+		new WC_Admin_Notes_Home_Screen_Feedback();
+
+		// Initialize RemoteInboxNotificationsEngine.
+		RemoteInboxNotificationsEngine::init();
 	}
 
 	/**
-	 * Filter in our ActionScheduler Store class.
-	 *
-	 * @param string $store_class ActionScheduler Store class name.
-	 * @return string ActionScheduler Store class name.
-	 */
-	public function replace_actionscheduler_store_class( $store_class ) {
-		// Don't override any other overrides.
-		if ( 'ActionScheduler_wpPostStore' !== $store_class ) {
-			return $store_class;
-		}
-
-		// Don't override if action scheduler is 3.0.0 or greater.
-		if ( version_compare( \ActionScheduler_Versions::instance()->latest_version(), '3.0', '>=' ) ) {
-			return $store_class;
-		}
-
-		return 'Automattic\WooCommerce\Admin\Overrides\WPPostStore';
-	}
-
-	/**
-	 * Removes core hooks in favor of our local feature plugin handlers.
-	 *
-	 * @see WC_Admin_Library::__construct()
+	 * Set up our admin hooks and plugin loader.
 	 */
 	protected function hooks() {
-		remove_action( 'init', array( 'WC_Admin_Library', 'load_features' ) );
-		remove_action( 'admin_enqueue_scripts', array( 'WC_Admin_Library', 'register_scripts' ) );
-		remove_action( 'admin_enqueue_scripts', array( 'WC_Admin_Library', 'load_scripts' ), 15 );
-		remove_action( 'woocommerce_components_settings', array( 'WC_Admin_Library', 'add_component_settings' ) );
-		remove_filter( 'admin_body_class', array( 'WC_Admin_Library', 'add_admin_body_classes' ) );
-		remove_action( 'admin_menu', array( 'WC_Admin_Library', 'register_page_handler' ) );
-		remove_filter( 'admin_title', array( 'WC_Admin_Library', 'update_admin_title' ) );
-
-		remove_action( 'rest_api_init', array( 'WC_Admin_Library', 'register_user_data' ) );
-		remove_action( 'in_admin_header', array( 'WC_Admin_Library', 'embed_page_header' ) );
-		remove_filter( 'woocommerce_settings_groups', array( 'WC_Admin_Library', 'add_settings_group' ) );
-		remove_filter( 'woocommerce_settings-wc_admin', array( 'WC_Admin_Library', 'add_settings' ) );
-
-		remove_action( 'admin_head', array( 'WC_Admin_Library', 'update_link_structure' ), 20 );
-
-		new Loader();
-
-		add_filter( 'woocommerce_admin_features', array( $this, 'replace_supported_features' ) );
+		add_filter( 'woocommerce_admin_features', array( $this, 'replace_supported_features' ), 0 );
 		add_action( 'admin_menu', array( $this, 'register_devdocs_page' ) );
 
+		Loader::get_instance();
 	}
 
 	/**
@@ -266,7 +246,7 @@ class FeaturePlugin {
 	 *
 	 * @return bool
 	 */
-	protected function has_satisfied_dependencies() {
+	public function has_satisfied_dependencies() {
 		$dependency_errors = $this->get_dependency_errors();
 		return 0 === count( $dependency_errors );
 	}
@@ -285,7 +265,7 @@ class FeaturePlugin {
 	 */
 	public function deactivate_self() {
 		deactivate_plugins( plugin_basename( WC_ADMIN_PLUGIN_FILE ) );
-		unset( $_GET['activate'] );
+		unset( $_GET['activate'] ); // phpcs:ignore CSRF ok.
 	}
 
 	/**

@@ -1,8 +1,8 @@
-=== FileBird - Wordpress Media Library Folders ===
+=== FileBird - WordPress Media Library Folders & File Manager ===
 Contributors: ninjateam
 Tags: wordpress media library folders, media library folders, media library folder, filebird, wp media folder, wordpress media folder, wordpress media folders, wordpress media library, wordpress media library plugin, wordpress file manager, wordpress media manager, file manager, file bird
 Requires at least: 3.0
-Tested up to: 5.4
+Tested up to: 5.4.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -48,27 +48,42 @@ This plugin supports most popular languages such as English, Spanish, Italian, F
 
 == COMPATIBLE WITH ==
 
-* Elementor – Top #1 WordPress page builder.
+FileBird has been developed to be **compatible with the most popular WordPress page builders, themes and plugins**
 
-* Beaver Builder – One of the popular page builder plugins for WordPress.
+**PAGE BUILDERS**
 
-* Visual Composer Page Builder.
+* Elementor – Top #1 WordPress page builder
+* Beaver Builder – One of the popular page builder plugins for WordPress
+* Visual Composer Page Builder
+* Divi Builder plugin from ElegantThemes (PRO)
+* WPBakery Page Builder – Top #1 page builder selling on CodeCanyon (PRO)
+* Brizy – Fast and easy page builder (PRO)
+* Thrive Architect - Fastest, Truly Visual ​WordPress Page Builder (PRO)
+* And a lot more +++
 
-* Divi Theme from ElegantThemes (PRO).
+**THEMES**
 
-* Divi Builder plugin from ElegantThemes (PRO).
+* Avada – Top #1 WordPress selling Theme of all time
+* Divi - Theme from ElegantThemes (PRO)
+* Enfold – The user friendliest WordPress Theme ever made
+* Uncode – The highly anticipated Frontend Editor
+* Jupiter - Elementor Multi-Purpose Theme
+* Flatsome – Best selling WooCommerce Theme
+* Salient - Responsive Multi-Purpose Theme
+* And a lot more +++
 
-* WPBakery Page Builder - Top #1 page builder selling on CodeCanyon. (PRO)
+**PLUGINS**
 
-* WPML - Best WP plugin to translate and display your website in any languages.
+* WPML – Best WP plugin to translate and display your website in any languages.
+* Polylang – A plugin allows you to create a bilingual or multilingual WordPress site.
+* Gutenberg – New editor Gutenberg from WordPress 5.0.
+* Classic Editor – Old WordPress editor to display tree view folders.
+* Slider Revolution – Best selling WordPress Responsive plugin
+* EWWW Image Optimizer
+* FooGallery Image Gallery – Responsive Photo Gallery
+* Smush - Compress, Image Optimizer, Lazy Load, WebP Images
+* And a lot more +++
 
-* Polylang - A plugin allows you to create a bilingual or multilingual WordPress site.
-
-* Gutenberg - New editor Gutenberg from WordPress 5.0.
-
-* Classic Editor - Old WordPress editor to display tree view folders.
-
-* Most of 3rd party themes or plugins.
 
 == HOW IT WORKS ==
 Are you a WordPress website administrator?
@@ -122,7 +137,7 @@ You can find it here [https://ninjateam.gitbook.io/filebird/](https://ninjateam.
 Yes, FileBird is free to use with 10 folders/categories
 
 = Should I purchase a paid plan? =
-If you have a large files and want to use more than 10 folders/categories, you can [upgrade to PRO version here](https://codecanyon.net/item/media-folders-manager-for-wordpress/21715379)
+If you have a large number of files and want to use more than 10 folders/categories, you can [upgrade to PRO version here](https://codecanyon.net/item/media-folders-manager-for-wordpress/21715379)
 
 == Screenshots ==
 1. Full control of your files
@@ -131,6 +146,40 @@ If you have a large files and want to use more than 10 folders/categories, you c
 4. Bulk selectto move / delete files
 
 == Changelog ==
+
+= 4.0.2 =
+- Fixed: Update FileBird database
+- Fixed: Bulk delete folders
+- Fixed: Some small bugs
+
+= 4.0.1 =
+- Fixed: Auto import folders from old version
+
+= 4.0 =
+- Added: New designs
+- Added: Use new technology
+- Added: Smooth performance for unlimited folders and large numbers of files
+- Added: REST API for developers
+- Added: Sort files by Name, Date, Modified, Author (PRO)
+- Added: Bulk select folders
+- Added: Bulk delete folders
+- Added: Wipe old data
+- Added: Clean all data
+- Added: Import from Media Library Assistant
+- Added: Import from WP Media Folder by JoomUnited
+- Added: Support Brizy builder
+- Added: Support Fusion builder (PRO)
+- Added: Compatible with KnowherePro theme
+- Improved: Switchers
+- Improved: Text and Popups
+- Improved: Documentation
+- Fixed: Special characters in folder name
+- Fixed: Auto detect site width
+- Fixed: SQL syntax errors
+- Fixed: Bugs in list view
+- Fixed: Duplicate queries
+- Fixed: Bugs with WPML
+- Fixed: Small bugs
 
 = 2.8 =
 - Added: Support Thrive Architect

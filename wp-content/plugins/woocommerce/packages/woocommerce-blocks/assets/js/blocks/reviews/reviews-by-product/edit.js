@@ -2,9 +2,7 @@
  * External dependencies
  */
 import { __, _n, sprintf } from '@wordpress/i18n';
-import {
-	InspectorControls,
-} from '@wordpress/editor';
+import { InspectorControls } from '@wordpress/block-editor';
 import {
 	Button,
 	PanelBody,
@@ -14,20 +12,28 @@ import {
 import { SearchListItem } from '@woocommerce/components';
 import { Fragment } from '@wordpress/element';
 import PropTypes from 'prop-types';
+import ProductControl from '@woocommerce/block-components/product-control';
+import { Icon, comment } from '@woocommerce/icons';
 
 /**
  * Internal dependencies
  */
-import ProductControl from '../../../components/product-control';
-import { IconReviewsByProduct } from '../../../components/icons';
 import EditorContainerBlock from '../editor-container-block.js';
 import NoReviewsPlaceholder from './no-reviews-placeholder.js';
-import { getBlockControls, getSharedReviewContentControls, getSharedReviewListControls } from '../edit-utils.js';
+import {
+	getBlockControls,
+	getSharedReviewContentControls,
+	getSharedReviewListControls,
+} from '../edit-utils.js';
 
 /**
  * Component to handle edit mode of "Reviews by Product".
  */
-const ReviewsByProductEditor = ( { attributes, debouncedSpeak, setAttributes } ) => {
+const ReviewsByProductEditor = ( {
+	attributes,
+	debouncedSpeak,
+	setAttributes,
+} ) => {
 	const { editMode, productId } = attributes;
 
 	const renderProductControlItem = ( args ) => {
@@ -76,10 +82,20 @@ const ReviewsByProductEditor = ( { attributes, debouncedSpeak, setAttributes } )
 						renderItem={ renderProductControlItem }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content', 'woocommerce' ) }>
-					{ getSharedReviewContentControls( attributes, setAttributes ) }
+				<PanelBody
+					title={ __( 'Content', 'woocommerce' ) }
+				>
+					{ getSharedReviewContentControls(
+						attributes,
+						setAttributes
+					) }
 				</PanelBody>
-				<PanelBody title={ __( 'List Settings', 'woocommerce' ) }>
+				<PanelBody
+					title={ __(
+						'List Settings',
+						'woocommerce'
+					) }
+				>
 					{ getSharedReviewListControls( attributes, setAttributes ) }
 				</PanelBody>
 			</InspectorControls>
@@ -99,8 +115,16 @@ const ReviewsByProductEditor = ( { attributes, debouncedSpeak, setAttributes } )
 
 		return (
 			<Placeholder
-				icon={ <IconReviewsByProduct className="block-editor-block-icon" /> }
-				label={ __( 'Reviews by Product', 'woocommerce' ) }
+				icon={
+					<Icon
+						icon={ comment }
+						className="block-editor-block-icon"
+					/>
+				}
+				label={ __(
+					'Reviews by Product',
+					'woocommerce'
+				) }
 			>
 				{ __(
 					'Show reviews of your product to build trust',
@@ -119,7 +143,7 @@ const ReviewsByProductEditor = ( { attributes, debouncedSpeak, setAttributes } )
 						} }
 						renderItem={ renderProductControlItem }
 					/>
-					<Button isDefault onClick={ onDone }>
+					<Button isPrimary onClick={ onDone }>
 						{ __( 'Done', 'woocommerce' ) }
 					</Button>
 				</div>
@@ -138,8 +162,16 @@ const ReviewsByProductEditor = ( { attributes, debouncedSpeak, setAttributes } )
 			<EditorContainerBlock
 				attributes={ attributes }
 				className="wc-block-all-reviews"
-				icon={ <IconReviewsByProduct className="block-editor-block-icon" /> }
-				name={ __( 'Reviews by Product', 'woocommerce' ) }
+				icon={
+					<Icon
+						icon={ comment }
+						className="block-editor-block-icon"
+					/>
+				}
+				name={ __(
+					'Reviews by Product',
+					'woocommerce'
+				) }
 				noReviewsPlaceholder={ NoReviewsPlaceholder }
 			/>
 		</Fragment>

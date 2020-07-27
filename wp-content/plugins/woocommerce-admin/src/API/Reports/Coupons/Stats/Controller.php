@@ -53,6 +53,7 @@ class Controller extends \WC_REST_Reports_Controller {
 		$args['order']     = $request['order'];
 		$args['coupons']   = (array) $request['coupons'];
 		$args['segmentby'] = $request['segmentby'];
+		$args['fields']    = $request['fields'];
 
 		return $args;
 	}
@@ -351,6 +352,15 @@ class Controller extends \WC_REST_Reports_Controller {
 				'coupon',
 			),
 			'validate_callback' => 'rest_validate_request_arg',
+		);
+		$params['fields']    = array(
+			'description'       => __( 'Limit stats fields to the specified items.', 'woocommerce-admin' ),
+			'type'              => 'array',
+			'sanitize_callback' => 'wp_parse_slug_list',
+			'validate_callback' => 'rest_validate_request_arg',
+			'items'             => array(
+				'type' => 'string',
+			),
 		);
 
 		return $params;

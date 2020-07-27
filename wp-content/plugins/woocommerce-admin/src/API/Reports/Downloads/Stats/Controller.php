@@ -57,6 +57,7 @@ class Controller extends \WC_REST_Reports_Controller {
 		$args['order_excludes']      = (array) $request['order_excludes'];
 		$args['ip_address_includes'] = (array) $request['ip_address_includes'];
 		$args['ip_address_excludes'] = (array) $request['ip_address_excludes'];
+		$args['fields']              = $request['fields'];
 
 		return $args;
 	}
@@ -364,6 +365,15 @@ class Controller extends \WC_REST_Reports_Controller {
 		$params['ip_address_excludes'] = array(
 			'description'       => __( 'Limit response to objects that don\'t have a specified ip address.', 'woocommerce-admin' ),
 			'type'              => 'array',
+			'validate_callback' => 'rest_validate_request_arg',
+			'items'             => array(
+				'type' => 'string',
+			),
+		);
+		$params['fields']              = array(
+			'description'       => __( 'Limit stats fields to the specified items.', 'woocommerce-admin' ),
+			'type'              => 'array',
+			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
 			'items'             => array(
 				'type' => 'string',

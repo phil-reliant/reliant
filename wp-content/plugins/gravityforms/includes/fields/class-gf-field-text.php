@@ -39,6 +39,28 @@ class GF_Field_Text extends GF_Field {
 		return true;
 	}
 
+	/**
+	 * Return the result (bool) by setting $this->failed_validation.
+	 * Return the validation message (string) by setting $this->validation_message.
+	 *
+	 * @since 2.4.11
+	 *
+	 * @param string|array $value The field value from get_value_submission().
+	 * @param array        $form  The Form Object currently being processed.
+	 */
+	public function validate( $value, $form ) {
+
+		if ( ! $this->maxLength || ! is_numeric( $this->maxLength ) ) {
+			return;
+		}
+
+		if ( GFCommon::safe_strlen( $value ) > $this->maxLength ) {
+			$this->failed_validation  = true;
+			$this->validation_message = empty( $this->errorMessage ) ? esc_html__( 'The text entered exceeds the maximum number of characters.', 'gravityforms' ) : $this->errorMessage;
+		}
+
+	}
+
 	public function get_field_input( $form, $value = '', $entry = null ) {
 		$form_id         = absint( $form['id'] );
 		$is_entry_detail = $this->is_entry_detail();
@@ -57,6 +79,7 @@ class GF_Field_Text extends GF_Field {
 		$size         = $this->size;
 		$class_suffix = $is_entry_detail ? '_admin' : '';
 		$class        = $size . $class_suffix;
+		$class        = esc_attr( $class );
 
 		$max_length = is_numeric( $this->maxLength ) ? "maxlength='{$this->maxLength}'" : '';
 

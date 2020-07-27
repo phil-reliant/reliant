@@ -168,6 +168,11 @@ class PageController {
 			while ( $parent_id ) {
 				if ( isset( $this->pages[ $parent_id ] ) ) {
 					$parent = $this->pages[ $parent_id ];
+
+					if ( 0 === strpos( $parent['path'], self::PAGE_ROOT ) ) {
+						$parent['path'] = 'admin.php?page=' . $parent['path'];
+					}
+
 					array_unshift( $breadcrumbs, array( $parent['path'], reset( $parent['title'] ) ) );
 					$parent_id = isset( $parent['parent'] ) ? $parent['parent'] : false;
 				} else {
@@ -175,6 +180,10 @@ class PageController {
 				}
 			}
 		}
+
+		$woocommerce_breadcrumb = array( 'admin.php?page=' . self::PAGE_ROOT, __( 'WooCommerce', 'woocommerce-admin' ) );
+
+		array_unshift( $breadcrumbs, $woocommerce_breadcrumb );
 
 		/**
 		 * The navigation breadcrumbs for the current page.
@@ -451,10 +460,6 @@ class PageController {
 	 * Set up a div for the app to render into.
 	 */
 	public static function page_wrapper() {
-		?>
-		<div class="wrap">
-			<div id="root"></div>
-		</div>
-		<?php
+		Loader::page_wrapper();
 	}
 }

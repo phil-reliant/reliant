@@ -1,106 +1,90 @@
 <?php
-
 /**
- * The plugin bootstrap file
+ * Plugin Name: FileBird Lite
+ * Plugin URI: https://ninjateam.org/wordpress-media-library-folders/
+ * Description: Organize thousands of WordPress media files into folders/ categories at ease.
+ * Version: 4.0.2
+ * Author: Ninja Team
+ * Author URI: https://ninjateam.org
+ * Text Domain: filebird
+ * Domain Path: /i18n/languages/
  *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- * @link              https://ninjateam.org
- * @since             1.0
- * @package           File_Bird
- * @wordpress-plugin
- * Plugin Name:       FileBird Lite
- * Plugin URI:        https://1.envato.market/FileBird
- * Description:       Organize thousands of WordPress media files into folders/ categories at ease.
- * Version:           2.8
- * Author:            Ninja Team
- * Author URI:        https://ninjateam.org
- * Text Domain:       filebird
- * Domain Path:       /languages
- */
-// ini_set('display_errors','Off');
-// ini_set('error_reporting', E_ALL );
-// define('WP_DEBUG', false);
-// define('WP_DEBUG_DISPLAY', false);
-// If this file is called directly, abort.
-if (!defined('WPINC')) {
-    die;
-}
-if (!defined('NJT_FILEBIRD_FOLDER')) {
-    define('NJT_FILEBIRD_FOLDER', 'nt_wmc_folder');
-}
-
-if (!defined('NJT_FILEBIRD_VERSION')) {
-    define('NJT_FILEBIRD_VERSION', '2.8');
-}
-$filebird_plugin_dir = plugin_dir_path(__FILE__);
-if (!defined('NJT_FILEBIRD_PLUGIN_PATH')) {
-    define('NJT_FILEBIRD_PLUGIN_PATH', $filebird_plugin_dir);
-}
-
-define('NJT_FILEBIRD_PLUGIN_URL', plugins_url() . '/' . basename(plugin_dir_path(__FILE__)));
-
-if (!defined('NJT_FILEBIRD_TEXT_DOMAIN')) {
-    define('NJT_FILEBIRD_TEXT_DOMAIN', 'filebird');
-}
-
-if (!defined('NJT_FILEBIRD_FOLDER_BASE')) {
-    define('NJT_FILEBIRD_FOLDER_BASE', plugin_basename(__FILE__));
-}
-
-if (!defined('NJT_FB_V')) {
-  define('NJT_FB_V', '0');
-}
-
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-filebird-activator.php
- */
-function filebird_activate()
-{
-    require_once plugin_dir_path(__FILE__) . 'includes/class-filebird-activator.php';
-    FileBird_Activator::activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-filebird-deactivator.php
- */
-function filebird_deactivate()
-{
-    require_once plugin_dir_path(__FILE__) . 'includes/class-filebird-deactivator.php';
-    FileBird_Deactivator::deactivate();
-}
-
-register_activation_hook(__FILE__, 'filebird_activate');
-register_deactivation_hook(__FILE__, 'filebird_deactivate');
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path(__FILE__) . 'includes/class-filebird.php';
-
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
+ * @package FileBirdPlugin
  */
 
-function filebird_run()
-{
-    $plugin = new FileBird();
-    $plugin->run();
+namespace FileBird;
+
+defined('ABSPATH') || exit;
+
+if (!defined('NJFB_PREFIX')) {
+  define('NJFB_PREFIX', 'filebird');
 }
 
-filebird_run();
-
-if ( function_exists( 'register_block_type' ) ) {
-    require plugin_dir_path(__FILE__) . 'blocks/filebird-gallery/src/init.php';
+if (!defined('NJFB_VERSION')) {
+  define('NJFB_VERSION', '4.0.2');
 }
+
+if (!defined('NJFB_PLUGIN_URL')) {
+  define('NJFB_PLUGIN_URL', plugin_dir_url(__FILE__));
+}
+
+if (!defined('NJFB_PLUGIN_PATH')) {
+  define('NJFB_PLUGIN_PATH', plugin_dir_path(__FILE__));
+}
+
+if (!defined('NJFB_PLUGIN_BASE_NAME')) {
+  define('NJFB_PLUGIN_BASE_NAME', plugin_basename(__FILE__));
+}
+
+if (!defined('NJFB_REST_URL')) {
+  define('NJFB_REST_URL', 'njt-fbv/v1');
+}
+
+if (!defined('NJFB_REST_PUBLIC_URL')) {
+  define('NJFB_REST_PUBLIC_URL', 'njt-fbv/public/v1');
+}
+
+spl_autoload_register(function ($class) {
+  $prefix = __NAMESPACE__; // project-specific namespace prefix
+  $base_dir = __DIR__ . '/includes'; // base directory for the namespace prefix
+
+  $len = strlen($prefix);
+  if (strncmp($prefix, $class, $len) !== 0) { // does the class use the namespace prefix?
+    return; // no, move to the next registered autoloader
+  }
+
+  $relative_class_name = substr($class, $len);
+
+  // replace the namespace prefix with the base directory, replace namespace
+  // separators with directory separators in the relative class name, append
+  // with .php
+  $file = $base_dir . str_replace('\\', '/', $relative_class_name) . '.php';
+
+  if (file_exists($file)) {
+    require $file;
+  }
+});
+
+function init() {
+  Plugin::getInstance();
+  Plugin::activate();
+  
+  I18n::loadPluginTextdomain();
+
+  Classes\Convert::getInstance();
+  Classes\PageBuilders::getInstance();
+  Classes\Feedback::getInstance();
+  Classes\Review::getInstance();
+
+  Page\Settings::getInstance();
+  Controller\Folder::getInstance();
+  Controller\FolderUser::getInstance();
+  Controller\CompatibleWpml::getInstance();
+  Controller\CompatiblePolylang::getInstance();
+
+  Controller\Api::getInstance();
+}
+add_action('plugins_loaded', 'FileBird\\init');
+
+register_activation_hook(__FILE__, array('FileBird\\Plugin', 'activate'));
+register_deactivation_hook(__FILE__, array('FileBird\\Plugin', 'deactivate'));

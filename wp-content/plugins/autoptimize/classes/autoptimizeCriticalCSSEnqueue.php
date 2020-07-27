@@ -27,7 +27,7 @@ class autoptimizeCriticalCSSEnqueue {
         $enqueue = true;
 
         // ... which are not the ones below.
-        if ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
+        if ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || 'nokey' == $key['status'] || 'invalid' == $key['status'] || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) {
             $enqueue = false;
             autoptimizeCriticalCSSCore::ao_ccss_log( "Job queuing is not available for WordPress's logged in users, feeds, error pages, ajax calls, to criticalcss.com itself or when a valid API key is not found", 3 );
         }
@@ -71,7 +71,7 @@ class autoptimizeCriticalCSSEnqueue {
             }
 
             // Match for types in rules if no path rule matches and if we're not enforcing paths.
-            if ( ! $job_qualify && ( ! $ao_ccss_forcepath || ! in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) ) {
+            if ( ! $job_qualify && ( ! $ao_ccss_forcepath || ! in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) || ! apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) ) {
                 foreach ( $ao_ccss_rules['types'] as $type => $props ) {
 
                     // Prepare rule target and log.
@@ -91,8 +91,8 @@ class autoptimizeCriticalCSSEnqueue {
                 }
             }
 
-            if ( $job_qualify && false == $rule_properties['hash'] && false != $rule_properties['file'] ) {
-                // If job qualifies but rule hash is false and file isn't false  (MANUAL rule), job does not qualify despite what previous evaluations says.
+            if ( $job_qualify && ( ( false == $rule_properties['hash'] && false != $rule_properties['file'] ) || strpos( $req_type, 'template_' ) !== false ) ) {
+                // If job qualifies but rule hash is false and file isn't false (MANUAL rule) or if template, job does not qualify despite what previous evaluations says.
                 $job_qualify = false;
                 autoptimizeCriticalCSSCore::ao_ccss_log( 'Job submission DISQUALIFIED by MANUAL rule <' . $target_rule . '> with hash <' . $rule_properties['hash'] . '> and file <' . $rule_properties['file'] . '>', 3 );
             } elseif ( ! $job_qualify && empty( $rule_properties ) ) {
@@ -103,7 +103,7 @@ class autoptimizeCriticalCSSEnqueue {
                 // Should we switch to path-base AUTO-rules? Conditions:
                 // 1. forcepath option has to be enabled (off by default)
                 // 2. request type should be (by default, but filterable) one of is_page (removed for now: woo_is_product or woo_is_product_category).
-                if ( $ao_ccss_forcepath && in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) {
+                if ( ( $ao_ccss_forcepath && in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) || apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) {
                     if ( '/' !== $req_path ) {
                         $target_rule = 'paths|' . $req_path;
                     } else {
@@ -195,14 +195,21 @@ class autoptimizeCriticalCSSEnqueue {
 
         // Iterates over the array to match a type.
         foreach ( $ao_ccss_types as $type ) {
-            if ( strpos( $type, 'custom_post_' ) !== false ) {
+            if ( is_404() ) {
+                $page_type = 'is_404';
+                break;
+            } elseif ( strpos( $type, 'custom_post_' ) !== false ) {
                 // Match custom post types.
                 if ( get_post_type( get_the_ID() ) === substr( $type, 12 ) ) {
                     $page_type = $type;
                     break;
                 }
             } elseif ( strpos( $type, 'template_' ) !== false ) {
-                // If templates; don't break, templates become manual-only rules.
+                // Match templates.
+                if ( is_page_template( substr( $type, 9 ) ) ) {
+                    $page_type = $type;
+                    break;
+                }
             } else {
                 // Match all other existing types
                 // but remove prefix to be able to check if the function exists & returns true.
