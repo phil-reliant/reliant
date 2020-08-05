@@ -79,6 +79,18 @@ function narwhal_register_post_types() {
 			'publicly_queryable' => true,
 			'has_archive' => true,
 			'menu_icon' => 'dashicons-media-document'
+        ),
+        'reliant_guides' => array(
+			'single_label' => 'Guide',
+			'plural_label' => 'Guides',
+			'single_graphql_label' => 'Guide',
+			'plural_graphql_label' => 'Guides',
+			'supports' => array('title', 'excerpt', 'thumbnail', 'revisions'),
+			'taxonomies' => array('category', 'post_tag'),
+			'rewrite' => array('slug' => 'guides', 'with_front' => false),
+			'publicly_queryable' => true,
+			'has_archive' => true,
+			'menu_icon' => 'dashicons-portfolio'
 		),
 		'reliant_eol_product' => array(
 			'single_label' => 'EOL Product',
