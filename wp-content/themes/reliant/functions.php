@@ -171,6 +171,7 @@ foreach ( new RecursiveIteratorIterator( $iterator ) as $file ) {
 		require $file;
 	}
 }
-add_action( 'init', function() {
-    remove_post_type_support( 'page', 'editor' );
-}, 99);
+/** uncomment to remove page editing */
+// add_action( 'init', function() {
+//     remove_post_type_support( 'page', 'editor' );
+// }, 99);
