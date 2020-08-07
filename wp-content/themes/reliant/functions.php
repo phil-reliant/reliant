@@ -171,6 +171,54 @@ foreach ( new RecursiveIteratorIterator( $iterator ) as $file ) {
 		require $file;
 	}
 }
+
+if( function_exists('acf_add_local_field_group') ):
+
+acf_add_local_field_group(array(
+	'key' => 'group_5f2d5478db636',
+	'title' => 'Single Guide Details',
+	'fields' => array(
+		array(
+			'key' => 'field_5f2d54790282e',
+			'label' => 'Guide Url',
+			'name' => 'guide_url',
+			'type' => 'url',
+			'instructions' => 'Url of the PDF',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'show_in_graphql' => 1,
+			'default_value' => '',
+			'placeholder' => '',
+		),
+	),
+	'location' => array(
+		array(
+			array(
+				'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'reliant_guides',
+			),
+		),
+	),
+	'menu_order' => 0,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => true,
+	'description' => '',
+	'show_in_graphql' => 1,
+	'graphql_field_name' => 'guide_details',
+));
+
+endif;
+
 /** uncomment to remove page editing */
 // add_action( 'init', function() {
 //     remove_post_type_support( 'page', 'editor' );

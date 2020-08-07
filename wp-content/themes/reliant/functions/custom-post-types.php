@@ -177,3 +177,50 @@ function narwhal_register_post_types() {
 
 	register_taxonomy( 'eol_category', array( 'reliant_eol_product' ), $args );
 }
+
+if( function_exists('acf_add_local_field_group') ):
+
+	acf_add_local_field_group(array(
+		'key' => 'group_5f2d5997a0c79',
+		'title' => 'Single Guide Details',
+		'fields' => array(
+			array(
+				'key' => 'field_5f2d5997b7f63',
+				'label' => 'Guide Url',
+				'name' => 'guide_url',
+				'type' => 'url',
+				'instructions' => 'The URL for the guide',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'show_in_graphql' => 1,
+				'default_value' => '',
+				'placeholder' => '',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'reliant_guides',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'normal',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => '',
+		'active' => true,
+		'description' => '',
+		'show_in_graphql' => 1,
+		'graphql_field_name' => 'guide_details',
+	));
+	
+	endif;
