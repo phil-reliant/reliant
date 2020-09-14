@@ -171,7 +171,10 @@ foreach ( new RecursiveIteratorIterator( $iterator ) as $file ) {
 		require $file;
 	}
 }
-
+/*
+ * Duplicate code
+ * This field is managed by ACF in live database.
+ *
 if( function_exists('acf_add_local_field_group') ):
 
 acf_add_local_field_group(array(
@@ -217,7 +220,7 @@ acf_add_local_field_group(array(
 	'graphql_field_name' => 'guide_details',
 ));
 
-endif;
+endif;*/
 
 /** uncomment to remove page editing */
 // add_action( 'init', function() {
