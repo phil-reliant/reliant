@@ -6,8 +6,7 @@
  *
  * @package reliant
  */
-/** test update: pm at 9/17/20 8:13am */
-/** test update: pm at 9/17/20 8:40am */
+/** test updated sep 22 1:15pm */
 
 
 if ( ! function_exists( 'reliant_setup' ) ) :
